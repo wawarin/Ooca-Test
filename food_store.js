@@ -1,23 +1,30 @@
 class Calculator {
   constructor() {
     this.MENU = {
-      Red: 50,
-      Green: 40,
-      Blue: 30,
-      Yellow: 50,
-      Pink: 80,
-      Purple: 90,
-      Orange: 120,
+      red: 50,
+      green: 40,
+      blue: 30,
+      yellow: 50,
+      pink: 80,
+      purple: 90,
+      orange: 120,
     };
   }
+  // Lowercase both the orders and the menu for case-insensitive comparison
+  lowerize = (obj) =>
+    Object.keys(obj).reduce((acc, k) => {
+      acc[k.toLowerCase()] = obj[k];
+      return acc;
+    }, {});
 
   calculatePrice(orders, hasMemberCard = false) {
     let totalPrice = 0;
-
+    const lowerOrders = this.lowerize(orders);
+    console.log(lowerOrders);
     // Calculate total price based on menu
     for (const item in orders) {
-      if (this.MENU[item]) {
-        totalPrice = totalPrice + (this.MENU[item] * orders[item])
+      if (this.MENU[item.toLowerCase()]) {
+        totalPrice = totalPrice + (this.MENU[item.toLowerCase()] * lowerOrders[item.toLowerCase()]);
       } else {
         throw new Error(`Item '${item}' is not on the menu.`);
       }
@@ -25,12 +32,12 @@ class Calculator {
 
     // Discount 5% for special items
     let specialDiscount = 0;
-    const specialItems = ["Orange", "Pink", "Green"];
+    const specialItems = ["orange", "pink", "green"];
     specialItems.forEach((item) => {
 
       // Check if the item is ordered more than 2
-      if (orders[item] >= 2) {
-        specialDiscount = specialDiscount + 0.05 * (this.MENU[item] * orders[item]);
+      if (lowerOrders[item] >= 2) {
+        specialDiscount = specialDiscount + 0.05 * (this.MENU[item.toLowerCase()] * lowerOrders[item.toLowerCase()]);
       }
     });
 
